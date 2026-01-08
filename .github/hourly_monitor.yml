@@ -1,0 +1,24 @@
+name: Rekor identity log monitor for DZ
+
+on:
+  schedule:
+    - cron: '0 * * * *' # every hour
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  run_consistency_proof:
+    permissions:
+      contents: read
+      issues: write
+      id-token: write # Needed to detect the current reusable repository and ref
+    uses: sigstore/rekor-monitor/.github/workflows/reusable_monitoring.yml@a1671758cdd0b201bab7e7b968226cd3b7808044
+    with:
+      file_issue: true
+      config: |
+        monitoredValues:
+          subjects:
+            - dangerzone-release-key@freedom\.press
+          fingerprints:
+            - 089c5e9a2c90336b87f529af528db2ec14caf36695c5ab80f14f0e735c730a1b
